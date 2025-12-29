@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { LogOut, ChevronDown, ChevronUp } from 'lucide-react';
+import { LogOut, ChevronDown, ChevronUp, Trash2 } from 'lucide-react';
 import { Suggestion } from '@/hooks/useSuggestionState';
 
 /**
@@ -43,6 +43,19 @@ export default function AdminDashboard() {
   const handleLogout = () => {
     localStorage.removeItem('admin_token');
     window.location.href = '/';
+  };
+
+  const handleDeleteSuggestion = (id: string) => {
+    if (window.confirm('Are you sure you want to delete this suggestion?')) {
+      const updatedSuggestions = suggestions.filter(s => s.id !== id);
+      setSuggestions(updatedSuggestions);
+      localStorage.setItem('suggestion_collection_suggestions', JSON.stringify(updatedSuggestions));
+      
+      // Remove from expanded set if it was expanded
+      const newExpanded = new Set(expandedIds);
+      newExpanded.delete(id);
+      setExpandedIds(newExpanded);
+    }
   };
 
   const formatDate = (timestamp: number) => {
@@ -116,20 +129,33 @@ export default function AdminDashboard() {
                       </p>
                     </div>
 
-                    {/* Expand/Collapse Button */}
-                    {isLongText && (
+                    {/* Action Buttons */}
+                    <div className="flex-shrink-0 flex gap-2">
+                      {/* Delete Button */}
                       <button
-                        onClick={() => toggleExpanded(suggestion.id)}
-                        className="flex-shrink-0 p-2 text-primary hover:bg-secondary rounded-lg transition-colors duration-200"
-                        aria-label={isExpanded ? 'Show less' : 'Show more'}
+                        onClick={() => handleDeleteSuggestion(suggestion.id)}
+                        className="p-2 text-destructive hover:bg-destructive/10 rounded-lg transition-colors duration-200"
+                        aria-label="Delete suggestion"
+                        title="Delete this suggestion"
                       >
-                        {isExpanded ? (
-                          <ChevronUp size={20} />
-                        ) : (
-                          <ChevronDown size={20} />
-                        )}
+                        <Trash2 size={18} />
                       </button>
-                    )}
+
+                      {/* Expand/Collapse Button */}
+                      {isLongText && (
+                        <button
+                          onClick={() => toggleExpanded(suggestion.id)}
+                          className="p-2 text-primary hover:bg-secondary rounded-lg transition-colors duration-200"
+                          aria-label={isExpanded ? 'Show less' : 'Show more'}
+                        >
+                          {isExpanded ? (
+                            <ChevronUp size={20} />
+                          ) : (
+                            <ChevronDown size={20} />
+                          )}
+                        </button>
+                      )}
+                    </div>
                   </div>
 
                   {/* Suggestion Footer */}

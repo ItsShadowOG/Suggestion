@@ -60,11 +60,11 @@ export default function Home() {
           <div className="space-y-6">
             <div className="space-y-4">
               <h1 className="text-5xl md:text-6xl font-display text-foreground leading-tight">
-                We Value Your{' '}
-                <span className="text-primary">Feedback</span>
+                We Want Your{' '}
+                <span className="text-primary">Suggestion</span>
               </h1>
               <p className="text-lg md:text-xl text-muted-foreground font-body">
-                Help us improve by sharing your suggestions. Every voice matters.
+                Send us your suggestions. Every voice matters.
               </p>
             </div>
 
